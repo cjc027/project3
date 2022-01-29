@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 
@@ -13,17 +13,26 @@ from .models import Route, Photo
 
 # Define the home view
 def home(request):
-  return HttpResponse('<h1>Hello /ᐠ｡‸｡ᐟ\ﾉ</h1>')
+	return redirect('about')
+  # return HttpResponse('<h1>Hello /ᐠ｡‸｡ᐟ\ﾉ</h1>')
 # Create your views here.
 
 def about(request):
     return render(request, 'about.html')
 
-class RouteList(ListView):
-  model = Route
+# class RouteList(ListView):
+# 	model = Route
+
+def index(request):
+	routes = Route.objects.all()
+	# routes = Route.objects.filter(user=request.user)
+
+	return render(request, 'routes/index.html', {
+		'routes': routes
+	})
+
 
 def routes_detail(request, route_id):
-    # find a cat by its id, cat_id is from the urls.py file for the cats_detail route
     route = Route.objects.get(id=route_id)
 
    
