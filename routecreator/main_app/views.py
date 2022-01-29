@@ -21,3 +21,12 @@ def about(request):
 
 class RouteList(ListView):
   model = Route
+
+def routes_detail(request, route_id):
+    # find a cat by its id, cat_id is from the urls.py file for the cats_detail route
+    route = Route.objects.get(id=route_id)
+
+   
+    return render(request, 'routes/detail.html', {
+        'route': route,
+    })
