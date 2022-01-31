@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from datetime import date
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 MODE = (
     ('R', 'Running'),
@@ -14,15 +15,15 @@ class Route(models.Model):
         choices=MODE,
         default=MODE[0][0]
     )
-    travel_distance = models.IntegerField()
-    travel_hours = models.IntegerField()
-    travel_minutes = models.IntegerField()
+    travel_distance = models.FloatField('Miles:', validators=[MinValueValidator(0.0)])
+    travel_hours = models.IntegerField(validators=[MinValueValidator(0.0)])
+    travel_minutes = models.IntegerField(validators=[MinValueValidator(0.0)])
     country = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
-    description = models.TextField(max_length=500)
+    description = models.TextField('Describe your route in detail:', max_length=5000)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, null=True)
+    name = models.CharField('Name of route:', max_length=100, null=True)
     def __str__(self):
         return self.name
     def get_absolute_url(self):
