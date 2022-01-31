@@ -10,4 +10,5 @@ urlpatterns = [
     path('routes/create/', views.RouteCreate.as_view(), name='routes_create'),
     path('routes/<int:pk>/update/', views.RouteUpdate.as_view(), name='routes_update'),
     path('routes/<int:pk>/delete/', views.RouteDelete.as_view(), name='routes_delete'),
+    path('routes/<int:route_id>/add_photo/', views.add_photo, name='add_photo'),
 ]

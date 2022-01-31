@@ -1,19 +1,49 @@
 {% extends 'base.html' %} {% block content %}
+<div class='row'>
+	<div class="col s6">
+		<div class="card">
+		  <div class="card-content">
+			<span class="card-title">{{ route.name }}</span>
+			<p>Name: {{ route.name }}</p>
+			<p>Mode: {{ route.mode_of_transport }}</p>
+			<p>Distance: {{ route.travel_distance }}</p>
+			<p>Travel Time: {{route.travel_time }}</p>
+			<p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
+		  </div>
+		  <div class="card-action">
+			<a href="{% url 'routes_update' route.id %}">Edit Route</a>
+			<a href="{% url 'routes_delete' route.id %}">Delete</a>
+		  </div>
+		</div>
+	</div>
+	<div class="col s6">
+		<div class="card">
+			<div class="card-content">
+				<p>Description: {{route.description}}</p>
+			</div>
+		</div>
+	</div>
+</div>
+<hr>
 
-<div class="card">
-  <div class="card-content">
-    <span class="card-title">{{ route.name }}</span>
-    <p>Name: {{ route.name }}</p>
-    <p>Mode: {{ route.mode_of_transport }}</p>
-    <p>Distance: {{ route.travel_distance }}</p>
-    <p>Travel Time: {{route.travel_time }}</p>
-    <p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
-    <p>Description: {{route.description}}</p>
-  </div>
-  <div class="card-action">
-    <a href="{% url 'routes_update' route.id %}">Edit Route</a>
-    <a href="{% url 'routes_delete' route.id %}">Delete</a>
-  </div>
+<div class="row">
+	</div>
+	<!-- Insert photo markup below this comment -->
+	{% for photo in route.photo_set.all %}
+	<img class="responsive-img card-panel" src="{{photo.url}}">
+	{% empty %}
+	<div class="card-panel teal-text center-align">No Photos Uploaded</div>
+	{% endfor %}
+
+	<form action="{% url 'add_photo' route.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
+		{% csrf_token %}
+		<input type="file" name="photo-file">
+		<br><br>
+		<input type="submit" class="btn" value="Upload Photo">
+	</form>
 </div>
 
+
+
 {% endblock content %}
+

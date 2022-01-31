@@ -9,8 +9,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required # for function definitions, not CBV
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+import uuid
+import boto3
 from .models import Route, Photo
 
+BUCKET = 'cjc027-catcollector'
+S3_BASE_URL = 'https://s3.us-west-1.amazonaws.com/'
 
 def home(request):
 	return redirect('about')
@@ -76,3 +80,22 @@ class RouteUpdate(UpdateView):
 class RouteDelete(DeleteView):
     model = Route
     success_url = '/routes/'
+
+
+def add_photo(request, route_id):
+    # photo-file will be the "name" attribute on the <input type="file">
+    photo_file = request.FILES.get('photo-file', None)
+    if photo_file:
+        s3 = boto3.client('s3')
+        # need a unique "key" for S3 / needs image file extension too
+        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+        # just in case something goes wrong
+        try:
+            s3.upload_fileobj(photo_file, BUCKET, key)
+            # build the full url string
+            url = f"{S3_BASE_URL}{BUCKET}/{key}"
+            # we can assign to cat_id or cat (if you have a cat object)
+            Photo.objects.create(url=url, route_id=route_id)
+        except:
+            print('An error occurred uploading file to S3')
+    return redirect('detail', route_id=route_id)
