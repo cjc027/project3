@@ -62,9 +62,7 @@ def signup(request):
 
 class RouteCreate (CreateView):
     model = Route
-    fields = fields = ['travel_distance', 'travel_hours', 'travel_minutes', 'date_created', 'country', 'state', 'city', 'description', 'name', 'mode_of_transport'] # referring the models field, so what fields do you want
-
-
+    fields = fields = ['name', 'mode_of_transport', 'travel_distance', 'country', 'state', 'city', 'travel_hours', 'travel_minutes',  'description'] # referring the models field, so what fields do you want
     # to include on the form
 
     def form_valid(self, form):
