@@ -10,6 +10,10 @@
     <p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
     <p>Description: {{route.description}}</p>
   </div>
+  <div class="card-action">
+    <a href="{% url 'routes_update' route.id %}">Edit Route</a>
+    <a href="{% url 'routes_delete' route.id %}">Delete</a>
+  </div>
 </div>
 
 {% endblock content %}
