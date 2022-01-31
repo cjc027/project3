@@ -60,8 +60,7 @@ def signup(request):
 
 class RouteCreate (CreateView):
     model = Route
-    fields = fields = ['travel_distance', 'travel_hours', 'travel_minutes', 'date_created', 'country', 'state', 'city', 'description', 'name', 'mode_of_transport'] # referring the models field, so what fields do you want
-
+    fields = fields = ['name', 'mode_of_transport', 'travel_distance', 'country', 'state', 'city', 'travel_hours', 'travel_minutes',  'description']
 
     # to include on the form
 
@@ -69,3 +68,12 @@ class RouteCreate (CreateView):
         form.instance.user = self.request.user
 
         return super().form_valid(form)
+
+class RouteUpdate(UpdateView):
+    model = Route
+    # limit the renaming of the cat
+    fields = ['name', 'mode_of_transport', 'travel_distance', 'country', 'state', 'city', 'travel_hours', 'travel_minutes',  'description']
+
+class RouteDelete(DeleteView):
+    model = Route
+    success_url = '/routes/'
