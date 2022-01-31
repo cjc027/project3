@@ -11,18 +11,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Route, Photo
 
-# Define the home view
+
 def home(request):
 	return redirect('about')
   # return HttpResponse('<h1>Hello /ᐠ｡‸｡ᐟ\ﾉ</h1>')
-# Create your views here.
 
 def about(request):
     return render(request, 'about.html')
 
-# class RouteList(ListView):
+# class RouteList(LoginRequiredMixin, ListView):
 # 	model = Route
 
+@login_required
 def index(request):
 	routes = Route.objects.all()
 	# routes = Route.objects.filter(user=request.user)
@@ -35,7 +35,25 @@ def index(request):
 def routes_detail(request, route_id):
     route = Route.objects.get(id=route_id)
 
-   
     return render(request, 'routes/detail.html', {
         'route': route,
     })
+
+
+
+
+def signup(request):
+	error_message = ''
+
+	if request.method == 'POST':
+		form = UserCreationForm(request.POST)
+		if form.is_valid():
+			user = form.save()
+			login(request, user)
+			return redirect('index')
+		else:
+			error_message = 'Invalid sign up - Try again'
+	
+	form = UserCreationForm()
+	context = {'form': form, 'error_message': error_message}
+	return render(request, 'registration/signup.html', context)
