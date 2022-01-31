@@ -15,8 +15,8 @@ class Route(models.Model):
         default=MODE[0][0]
     )
     travel_distance = models.IntegerField()
-    travel_time = models.TimeField()
-    date_created = models.DateField('Date traveled')
+    travel_hours = models.IntegerField()
+    travel_minutes = models.IntegerField()
     country = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
