@@ -57,3 +57,13 @@ def signup(request):
 	form = UserCreationForm()
 	context = {'form': form, 'error_message': error_message}
 	return render(request, 'registration/signup.html', context)
+
+class RouteCreate (CreateView):
+    model = Route
+    fields = fields = ['travel_distance', 'travel_time', 'date_created', 'country', 'state', 'city', 'description', 'name', 'mode_of_transport'] # referring the models field, so what fields do you want
+    # to include on the form
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+
+        return super().form_valid(form)

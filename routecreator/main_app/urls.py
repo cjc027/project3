@@ -7,4 +7,5 @@ urlpatterns = [
     path('routes/', views.index, name='index'),
     path('routes/<int:route_id>/', views.routes_detail, name='detail'),
     path('accounts/signup/', views.signup, name='signup'),
+    path('routes/create/', views.RouteCreate.as_view(), name='routes_create'),
 ]
