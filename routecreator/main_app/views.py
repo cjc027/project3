@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
 from .models import Route, Photo
-from .forms import RouteForm
+from .forms import RouteForm, CommentForm
 
 BUCKET = 'cjc027-catcollector'
 S3_BASE_URL = 'https://s3.us-west-1.amazonaws.com/'
@@ -29,8 +29,8 @@ def about(request):
 
 @login_required
 def index(request):
-	routes = Route.objects.all()
-	# routes = Route.objects.filter(user=request.user)
+	# routes = Route.objects.all()
+	routes = Route.objects.filter(user=request.user)
 
 	return render(request, 'routes/index.html', {
 		'routes': routes
@@ -38,11 +38,12 @@ def index(request):
 
 
 def routes_detail(request, route_id):
-    route = Route.objects.get(id=route_id)
-
-    return render(request, 'routes/detail.html', {
-        'route': route,
-    })
+	route = Route.objects.get(id=route_id)
+	comment_form = CommentForm()
+	return render(request, 'routes/detail.html', {
+		'route': route,
+		'comment_form': comment_form,
+	})
 
 def signup(request):
 	error_message = ''
@@ -82,21 +83,36 @@ class RouteDelete(DeleteView):
 
 def add_photo(request, route_id):
     # photo-file will be the "name" attribute on the <input type="file">
-    photo_file = request.FILES.get('photo-file', None)
-    if photo_file:
-        s3 = boto3.client('s3')
-        # need a unique "key" for S3 / needs image file extension too
-        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
-        # just in case something goes wrong
-        try:
-            s3.upload_fileobj(photo_file, BUCKET, key)
-            # build the full url string
-            url = f"{S3_BASE_URL}{BUCKET}/{key}"
-            # we can assign to cat_id or cat (if you have a cat object)
-            Photo.objects.create(url=url, route_id=route_id)
-        except:
-            print('An error occurred uploading file to S3')
-    return redirect('detail', route_id=route_id)
+	photo_file = request.FILES.get('photo-file', None)
+	if request.user == Route.objects.get(id=route_id).user:
+		if photo_file:
+			s3 = boto3.client('s3')
+			# need a unique "key" for S3 / needs image file extension too
+			key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+			# just in case something goes wrong
+			try:
+				s3.upload_fileobj(photo_file, BUCKET, key)
+				# build the full url string
+				url = f"{S3_BASE_URL}{BUCKET}/{key}"
+				# we can assign to cat_id or cat (if you have a cat object)
+				Photo.objects.create(url=url, route_id=route_id)
+			except:
+				print('An error occurred uploading file to S3')
+		return redirect('detail', route_id=route_id)
+	else:
+		return
+
+
+def add_comment(request, route_id):
+	form = CommentForm(request.POST)
+	if form.is_valid():
+		print('Form is valid!')
+		print(type(request.user))
+		new_comment = form.save(commit=False)
+		new_comment.route_id = route_id
+		new_comment.user_id = request.user.id
+		new_comment.save()
+	return redirect('detail', route_id=route_id)
 
 
 def search(request):
@@ -135,3 +151,32 @@ def search_index(request):
 	print(search_results, '<== FILTERED ROUTES')
 
 	return render(request, 'routes/search_index.html', {'routes': search_results})
+
+
+
+
+
+
+
+
+# @login_required
+# def comment(request, comment_id):
+#    comments = Comment.objects.get(pk=comment_id)
+#    if request.user == comments.user:
+
+
+
+
+#     #   Comment.objects.filter(id=comment_id).delete()
+#     #   return redirect('posts:mypost')
+
+
+
+
+
+# @login_required
+# def post_edit(request, post_id):
+#   item = Post.objects.get(pk=post_id)
+#   if request.user == item.user:
+#       ...
+#       //write your code here

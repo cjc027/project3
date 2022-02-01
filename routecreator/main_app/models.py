@@ -9,6 +9,9 @@ MODE = (
     ('B', 'Biking'),
 )
 
+
+
+
 class Route(models.Model):
     mode_of_transport = models.CharField(
         max_length=1,
@@ -29,6 +32,16 @@ class Route(models.Model):
     def get_absolute_url(self):
         return reverse('detail', kwargs={'route_id': self.id})
 
+class Comment(models.Model):
+    content = models.TextField('Comment on this route:', max_length=5000)
+    route = models.ForeignKey(Route, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    # rating = models.BooleanField('Star this route if you like it', default=False)
+    def __str__(self):
+        return f"Comment belongs to {self.route_id} and {self.user}"
+    class Meta:
+        ordering = ['created_on']
 
 class Photo(models.Model):
     url = models.CharField(max_length=200)
