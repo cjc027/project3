@@ -48,3 +48,10 @@ class Photo(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE)
     def __str__(self):
         return f"Photo for route_id: {self.route_id} @{self.url}"
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    route = models.ForeignKey(Route, on_delete=models.CASCADE, null=True)
+    fav_route = models.BooleanField(default=False)
+    def __str__(self):
+        return f"{self.fav_routes} are {self.user}'s favorites."
