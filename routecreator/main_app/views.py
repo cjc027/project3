@@ -133,12 +133,17 @@ def search_index(request):
 	else:
 		route_filter.pop('city')
 
-	q1 = Route.objects.filter(**route_filter)
+
+	if route_filter.keys():
+		search_results = Route.objects.filter(**route_filter)
+	else:
+		search_results = Route.objects.all()
+		
 
 
-	print(q1, '<== FILTERED ROUTES')
+	print(search_results, '<== FILTERED ROUTES')
 	# q1 = Route.objects.filter(country=request.GET['country'], state=request.GET['state'], city=request.GET['city'])
 	# q1 = Route.objects.filter(country=country, state=state, city=city)
 
-
+	# return render(request, 'routes/search_index.html', {'routes': search_results})
 	return redirect('search')
