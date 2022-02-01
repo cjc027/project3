@@ -104,33 +104,41 @@ def search(request):
 	return render(request, 'search.html')
 
 def search_index(request):
-	print(request.GET['country'], '<===== REQUEST')
-	route = Route.objects.all()
-	# print(route[0].country, '<==== 1ST ROUTE')
-	for route in Route.objects.all():
-		print(route.country, '<==== ALL ROUTES')
+	print(request.GET, '<===== REQUEST')
+	# if request.GET['city']:
+	# 	print('Truthy')
+	# route = Route.objects.all()
+	# # print(route[0].country, '<==== 1ST ROUTE')
+	# for route in Route.objects.all():
+	# 	print(route.country, '<==== ROUTE.COUNTRY')
+	# country = request.GET['country']
+	# state = request.GET['state']
+	# city = request.GET['city']
 
-	country = request.GET['country']
-	if country:
-		country = request.GET["country"]
-	else:
-		country = ''
+	route_filter = {'country': '', 'state': '', 'city': ''}
 
-	state = request.GET['state']
-	if state:
-		state = request.GET["state"]
-	else:
-		state = ''
-
-	city = request.GET['city']
-	if city:
-		city = request.GET["city"]
-	else:
-		city = ''
-
-	# q1 = Route.objects.filter(country=request.GET['country'], state=request.GET['state'], city=request.GET['city'])
-	q1 = Route.objects.filter(country=country, state=state, city=city)
 	
-	print(q1, '<== ALL US ROUTES')
+	if request.GET['country']:
+		route_filter['country'] = request.GET["country"]
+	else:
+		route_filter.pop('country')
+
+	if request.GET['state']:
+		route_filter['state'] = request.GET["state"]
+	else:
+		route_filter.pop('state')
+
+	if request.GET['city']:
+		route_filter['city'] = request.GET["city"]
+	else:
+		route_filter.pop('city')
+
+	q1 = Route.objects.filter(**route_filter)
+
+
+	print(q1, '<== FILTERED ROUTES')
+	# q1 = Route.objects.filter(country=request.GET['country'], state=request.GET['state'], city=request.GET['city'])
+	# q1 = Route.objects.filter(country=country, state=state, city=city)
+
 
 	return redirect('search')
