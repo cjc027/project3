@@ -11,4 +11,6 @@ urlpatterns = [
     path('routes/<int:pk>/update/', views.RouteUpdate.as_view(), name='routes_update'),
     path('routes/<int:pk>/delete/', views.RouteDelete.as_view(), name='routes_delete'),
     path('routes/<int:route_id>/add_photo/', views.add_photo, name='add_photo'),
+    path('search/', views.search, name='search'),
+    path('search/index/', views.search_index, name='search_index'),
 ]

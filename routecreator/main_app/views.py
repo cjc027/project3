@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import uuid
 import boto3
 from .models import Route, Photo
+from .forms import RouteForm
 
 BUCKET = 'cjc027-catcollector'
 S3_BASE_URL = 'https://s3.us-west-1.amazonaws.com/'
@@ -42,9 +43,6 @@ def routes_detail(request, route_id):
     return render(request, 'routes/detail.html', {
         'route': route,
     })
-
-
-
 
 def signup(request):
 	error_message = ''
@@ -99,3 +97,40 @@ def add_photo(request, route_id):
         except:
             print('An error occurred uploading file to S3')
     return redirect('detail', route_id=route_id)
+
+
+def search(request):
+	# print(request.QUERY)
+	return render(request, 'search.html')
+
+def search_index(request):
+	print(request.GET['country'], '<===== REQUEST')
+	route = Route.objects.all()
+	# print(route[0].country, '<==== 1ST ROUTE')
+	for route in Route.objects.all():
+		print(route.country, '<==== ALL ROUTES')
+
+	country = request.GET['country']
+	if country:
+		country = request.GET["country"]
+	else:
+		country = ''
+
+	state = request.GET['state']
+	if state:
+		state = request.GET["state"]
+	else:
+		state = ''
+
+	city = request.GET['city']
+	if city:
+		city = request.GET["city"]
+	else:
+		city = ''
+
+	# q1 = Route.objects.filter(country=request.GET['country'], state=request.GET['state'], city=request.GET['city'])
+	q1 = Route.objects.filter(country=country, state=state, city=city)
+	
+	print(q1, '<== ALL US ROUTES')
+
+	return redirect('search')
