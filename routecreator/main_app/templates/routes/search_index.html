@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+<div class='row'>
+
+    {% if routes %}
+        {% for route in routes %}
+        <a href="{% url 'detail' route.id %}">
+            <div class="card">
+            <div class="card-content">
+                <span class="card-title">{{ route.name }}</span>
+                <p>Name: {{ route.name }}</p>
+                <p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
+            </div>
+            </div>
+            </a>
+        {% endfor %}
+    {% else %}
+        <h1>No matching routes were found</h1>
+        <a class='btn' href="{% url 'routes_create' %}">Create New Route</a>
+    {% endif %}
+
+</div>
+
+<div class='row'>
+
+    <h2>Search other routes</h2>
+
+    <form action="{% url 'search_index' %}" method="GET" class="card-panel">
+        {% csrf_token %}
+        <br><br>
+        <label for="country">Country:</label>
+        <input type="text" name='country'>
+        <label for="state">State:</label>
+        <input type="text" name='state'>
+        <label for="city">City:</label>
+        <input type="text" name='city'>
+        <input type="submit" class="btn" value="Search Routes">
+    </form>
+
+</div>
+    
+
+{% endblock content %}
+    

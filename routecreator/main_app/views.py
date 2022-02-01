@@ -105,15 +105,6 @@ def search(request):
 
 def search_index(request):
 	print(request.GET, '<===== REQUEST')
-	# if request.GET['city']:
-	# 	print('Truthy')
-	# route = Route.objects.all()
-	# # print(route[0].country, '<==== 1ST ROUTE')
-	# for route in Route.objects.all():
-	# 	print(route.country, '<==== ROUTE.COUNTRY')
-	# country = request.GET['country']
-	# state = request.GET['state']
-	# city = request.GET['city']
 
 	route_filter = {'country': '', 'state': '', 'city': ''}
 
@@ -142,8 +133,5 @@ def search_index(request):
 
 
 	print(search_results, '<== FILTERED ROUTES')
-	# q1 = Route.objects.filter(country=request.GET['country'], state=request.GET['state'], city=request.GET['city'])
-	# q1 = Route.objects.filter(country=country, state=state, city=city)
 
-	# return render(request, 'routes/search_index.html', {'routes': search_results})
-	return redirect('search')
+	return render(request, 'routes/search_index.html', {'routes': search_results})
