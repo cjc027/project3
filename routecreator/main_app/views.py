@@ -39,7 +39,6 @@ def index(request):
     # routes = Route.objects.all()
     routes = Route.objects.filter(user=request.user)
 
-
     return render(request, 'routes/index.html', {
         'routes': routes
     })
@@ -47,16 +46,20 @@ def index(request):
 
 def routes_detail(request, route_id):
 
-    route = Route.objects.get(id=route_id)
-    comment_form = CommentForm()
-    user_favorites = Favorite.objects.filter(
-        id__in=route.favorite_set.all().values_list('id'))
-    return render(request, 'routes/detail.html', {
-        'route': route,
-        'comment_form': comment_form,
-        'user_favorites': user_favorites
-    })
-
+	route = Route.objects.get(id=route_id)
+	comment_form = CommentForm()
+	user_favorites = Favorite.objects.filter(route_id=route_id, user_id=request.user.id).values_list('id')
+	# user_favorites = Favorite.objects.filter(
+	#     # id__in=route.favorite_set.all().values_list('id'))
+	# print(user_favorites[0].user_id)
+	# print(user_favorites[0].route_id)
+	print(user_favorites.values_list('id'))
+	print(user_favorites)
+	return render(request, 'routes/detail.html', {
+		'route': route,
+		'comment_form': comment_form,
+		'user_favorites': user_favorites
+	})
 
 
 def signup(request):
@@ -136,7 +139,6 @@ def add_comment(request, route_id):
     return redirect('detail', route_id=route_id)
 
 
-
 def search(request):
     # print(request.QUERY)
     return render(request, 'search.html')
@@ -178,37 +180,45 @@ def favorites(request):
 
 
 def set_favorite(request, route_id):
-	print(request.user.id)
+    print(request.user.id)
 
-	routes = Route.objects.filter(id=route_id)
-	f = Favorite.objects.filter(route_id=route_id)
-	# new_favorite.route_id = route_id
-	# this is where we left off on Tuesday
+    routes = Route.objects.filter(id=route_id)
+    f = Favorite.objects.filter(route_id=route_id)
+    # new_favorite.route_id = route_id
+    # this is where we left off on Tuesday
+
+    print(f)
+    favorite_set = routes[0].favorite_set.all()
+    # favorite_set.create(request.user.id)
+    # favorite_set.save()
+    print(favorite_set)
+
+    # route = get_object_or_404(Route, id=route_id)
+    # if request.method == 'POST':
+
+    # 	route.favorite.add(request.user)
+    # 	print(route)
+    Favorite.objects.create(user_id=request.user.id, route_id=route_id)
 	
-	print(f)
-	favorite_set = routes[0].favorite_set.all()
-	# favorite_set.create(request.user.id)
-	# favorite_set.save()
-	print(favorite_set)
-
-	# route = get_object_or_404(Route, id=route_id)
-	# if request.method == 'POST':
-
-	# 	route.favorite.add(request.user)
-	# 	print(route)
-	return redirect('detail', route_id=route_id)
+    print(f)
+    return redirect('detail', route_id=route_id)
 
 
 def remove_favorite(request, route_id):
+	f = Favorite.objects.filter(route_id=route_id)
 	print(request.user)
 	routes = Route.objects.filter(id=route_id)
 	print(routes[0])
-
-
+	favorite = Favorite.objects.filter(user_id=request.user.id, route_id=route_id)
+	# Favorite.objects.remove(favorite)
+	favorite.delete()
+	print(dir(favorite.first))
+	print(favorite.delete.__doc__)
+	print(f)
 	return redirect('detail', route_id=route_id)
 
 
-# @login_required
+	# @login_required
 # def comment(request, comment_id):
 #    comments = Comment.objects.get(pk=comment_id)
 #    if request.user == comments.user:
@@ -218,10 +228,8 @@ def remove_favorite(request, route_id):
 #     #   return redirect('posts:mypost')
 
 
-
 # @login_required
 # def post_edit(request, post_id):
 #   item = Post.objects.get(pk=post_id)
 #   if request.user == item.user:
 #       ...
-

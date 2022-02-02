@@ -53,4 +53,4 @@ class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     route = models.ForeignKey(Route, on_delete=models.CASCADE, null=True)
     def __str__(self):
-        return f"{self.fav_routes} are {self.user}'s favorites."
+        return f"{self.user}'s favorites."

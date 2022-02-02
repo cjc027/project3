@@ -4,18 +4,18 @@
     <div class="card">
       <div class="card-content">
 
-
-      {% if user.id in user_favorites %}
+      
+      {% if user_favorites %}
       <form action="{% url 'remove_favorite' route.id %}" method="POST" >
         {% csrf_token %}
-        <input type="submit" class="btn right" value="☆" />
+        <input type="submit" class="btn right" value="★" />
     </form> 
-     
+
       {% else %}
      
     <form action="{% url 'set_favorite' route.id %}" method="POST" >
       {% csrf_token %}
-      <input type="submit" class="btn right" value="★" />
+      <input type="submit" class="btn right" value="☆" />
     </form>
       {% endif %}
        
