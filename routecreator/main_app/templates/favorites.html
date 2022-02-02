@@ -6,14 +6,15 @@
 
 <div class='row'>
 
-    {% if routes %}
-        {% for route in routes %}
-        <a href="{% url 'detail' route.id %}">
+    {% if favorites %}
+        {% for favorite in favorites %}
+
+        <a href="{% url 'detail' favorite.route.id %}">
             <div class="card">
             <div class="card-content">
-                <span class="card-title">{{ route.name }}</span>
-                <p>Name: {{ route.name }}</p>
-                <p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
+                <span class="card-title">{{ favorite.name }}</span>
+                <p>Name: {{ favorite.route.name }}</p>
+                <p>Starting Location: {{favorite.route.city}}, {{favorite.route.state}}, {{favorite.route.country}}</p>
             </div>
             </div>
             </a>

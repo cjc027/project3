@@ -176,7 +176,13 @@ def search_index(request):
 
 
 def favorites(request):
-    return render(request, 'favorites.html')
+	favorites = Favorite.objects.select_related('route').filter(user_id=request.user.id)
+	# print(dir(Route.favorite_set))
+	#print(Favorite.objects.filter(user_id=request.user.id))
+	print(favorites)
+	return render(request, 'favorites.html', {
+		'favorites' : favorites
+	})
 
 
 def set_favorite(request, route_id):
