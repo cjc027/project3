@@ -12,7 +12,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 import uuid
 import boto3
+
 from .models import Favorite, Route, Photo
+
 from .forms import RouteForm, CommentForm
 
 BUCKET = 'cjc027-catcollector'
@@ -33,8 +35,10 @@ def about(request):
 
 @login_required
 def index(request):
+
     # routes = Route.objects.all()
     routes = Route.objects.filter(user=request.user)
+
 
     return render(request, 'routes/index.html', {
         'routes': routes
@@ -42,6 +46,7 @@ def index(request):
 
 
 def routes_detail(request, route_id):
+
     route = Route.objects.get(id=route_id)
     comment_form = CommentForm()
     user_favorites = Favorite.objects.filter(
@@ -51,6 +56,7 @@ def routes_detail(request, route_id):
         'comment_form': comment_form,
         'user_favorites': user_favorites
     })
+
 
 
 def signup(request):
@@ -96,6 +102,7 @@ class RouteDelete(DeleteView):
 
 def add_photo(request, route_id):
     # photo-file will be the "name" attribute on the <input type="file">
+
     photo_file = request.FILES.get('photo-file', None)
     if request.user == Route.objects.get(id=route_id).user:
         if photo_file:
@@ -129,12 +136,14 @@ def add_comment(request, route_id):
     return redirect('detail', route_id=route_id)
 
 
+
 def search(request):
     # print(request.QUERY)
     return render(request, 'search.html')
 
 
 def search_index(request):
+
     print(request.GET, '<===== REQUEST')
 
     route_filter = {'country': '', 'state': '', 'city': ''}
@@ -198,6 +207,7 @@ def remove_favorite(request, route_id):
 
 	return redirect('detail', route_id=route_id)
 
+
 # @login_required
 # def comment(request, comment_id):
 #    comments = Comment.objects.get(pk=comment_id)
@@ -208,9 +218,10 @@ def remove_favorite(request, route_id):
 #     #   return redirect('posts:mypost')
 
 
+
 # @login_required
 # def post_edit(request, post_id):
 #   item = Post.objects.get(pk=post_id)
 #   if request.user == item.user:
 #       ...
-#
+

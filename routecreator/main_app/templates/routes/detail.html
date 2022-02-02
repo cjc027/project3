@@ -4,6 +4,7 @@
     <div class="card">
       <div class="card-content">
 
+
       {% if user.id in user_favorites %}
       <form action="{% url 'remove_favorite' route.id %}" method="POST" >
         {% csrf_token %}
@@ -19,6 +20,7 @@
       {% endif %}
        
        <span class="card-title">{{ route.name }}</span>
+
         <p>Name: {{ route.name }}</p>
         <p>Mode: {{ route.mode_of_transport }}</p>
         <p>Distance: {{ route.travel_distance }}</p>
