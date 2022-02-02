@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+<div class='row'>
+
+    {% if routes %}
+        {% for route in routes %}
+        <a href="{% url 'detail' route.id %}">
+            <div class="card">
+            <div class="card-content">
+                <span class="card-title">{{ route.name }}</span>
+                <p>Name: {{ route.name }}</p>
+                <p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
+            </div>
+            </div>
+            </a>
+        {% endfor %}
+    {% else %}
+        <h1>No matching routes were found</h1>
+     
+    {% endif %}
+
+</div>
+
+{% endblock content %}

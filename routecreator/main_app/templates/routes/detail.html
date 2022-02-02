@@ -3,7 +3,22 @@
   <div class="col s6">
     <div class="card">
       <div class="card-content">
-        <span class="card-title">{{ route.name }}</span>
+
+      {% if user.id in user_favorites %}
+      <form action="{% url 'remove_favorite' route.id %}" method="POST" >
+        {% csrf_token %}
+        <input type="submit" class="btn right" value="☆" />
+    </form> 
+     
+      {% else %}
+     
+    <form action="{% url 'set_favorite' route.id %}" method="POST" >
+      {% csrf_token %}
+      <input type="submit" class="btn right" value="★" />
+    </form>
+      {% endif %}
+       
+       <span class="card-title">{{ route.name }}</span>
         <p>Name: {{ route.name }}</p>
         <p>Mode: {{ route.mode_of_transport }}</p>
         <p>Distance: {{ route.travel_distance }}</p>
