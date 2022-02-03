@@ -1,29 +1,32 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<h1>My Favorite Routes</h1>
 
+<div class="row">
+  {% if favorites %} {% for favorite in favorites %}
 
+  <a id="details" href="{% url 'detail' favorite.route.id %}">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ favorite.route.name }} 
+          {% if favorite.route.mode_of_transport == 'B' %}
+          <i class="material-icons">directions_bike</i>
+          {% else %}
+          <i class="material-icons">directions_run</i>
+          {% endif %}
+        </span>
 
-{% block content %}
+        <p>
+          {{favorite.route.city}}, {{favorite.route.state}},
+          {{favorite.route.country}}
+        </p>
+        <img class="responsive-img" src="{{ favorite.route.photo_set.first.url }}" />
+      </div>
+    </div>
+  </a>
+  {% endfor %} {% else %}
+  <h1>No matching routes were found</h1>
 
-<div class='row'>
-
-    {% if favorites %}
-        {% for favorite in favorites %}
-
-        <a href="{% url 'detail' favorite.route.id %}">
-            <div class="card">
-            <div class="card-content">
-                <span class="card-title">{{ favorite.name }}</span>
-                <p>Name: {{ favorite.route.name }}</p>
-                <p>Starting Location: {{favorite.route.city}}, {{favorite.route.state}}, {{favorite.route.country}}</p>
-            </div>
-            </div>
-            </a>
-        {% endfor %}
-    {% else %}
-        <h1>No matching routes were found</h1>
-     
-    {% endif %}
-
+  {% endif %}
 </div>
 
 {% endblock content %}

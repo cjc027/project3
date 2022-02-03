@@ -1,21 +1,20 @@
 {% extends 'base.html' %} {% block content %}
+
+<h1>{{ route.name }} Details</h1>
+
 <div class='row'>
   <div class="col s6">
     <div class="card">
-      <div class="card-content">
-
-      
+      <div class="card-content">  
       {% if user_favorites %}
       <form action="{% url 'remove_favorite' route.id %}" method="POST" >
         {% csrf_token %}
-        <input type="submit" class="btn right" value="★" />
+        <input id="favorite" type="submit" class="right" value="★" />
     </form> 
-
       {% else %}
-     
     <form action="{% url 'set_favorite' route.id %}" method="POST" >
       {% csrf_token %}
-      <input type="submit" class="btn right" value="☆" />
+      <input id="favorite" type="submit" class="right" value="☆" />
     </form>
       {% endif %}
        
