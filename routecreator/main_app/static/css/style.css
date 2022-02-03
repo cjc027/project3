@@ -41,8 +41,14 @@ textarea {
 .btn:hover {
   background-color: #d16909;
 }
+
 #favorite {
   background: none;
   border: none;
   font-size: 20px;
+  color:#d16909;
+}
+
+#favorite:hover {
+  cursor: pointer;
 }
