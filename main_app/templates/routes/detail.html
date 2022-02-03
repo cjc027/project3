@@ -25,10 +25,12 @@
         <p>Travel Time: {{ route.travel_hours }} h, {{ route.travel_minutes }} m </p>
         <p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
       </div>
+      {% if user.id == route.user.id %}
       <div class="card-action">
         <a class="edit" href="{% url 'routes_update' route.id %}">Edit Route</a>
         <a class="edit" href="{% url 'routes_delete' route.id %}">Delete</a>
       </div>
+      {% endif %}
     </div>
   </div>
   <div class="col s6">
