@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+	<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@700&display=swap" rel="stylesheet">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 
@@ -19,15 +19,15 @@
 		<nav>
 			<div class="nav-wrapper">
 				<ul>
-					<li><a href="/" class="left brand-logo">&nbsp;&nbsp;Route Creator&nbsp;&nbsp;</a></li>
+					<li><a href="/" class="left brand-logo">&nbsp;&nbsp;ROUTE CREATOR&nbsp;&nbsp;<img class="bike" src="https://i.imgur.com/FnppnMl.png" /></a></li>
 				</ul>
 				<ul class="right">
-					<li><a href="{% url 'about' %}">About</a></li>
+					<li><a href="{% url 'search' %}">Search Routes</a></li>
 					{% if user.is_authenticated %}
 					<li><a href="{% url 'index' %}">My Routes</a></li>
 					<li><a href="{% url 'favorites' %}">Favorites</a></li>
-                    <li><a href="{% url 'routes_create' %}">Create New Route</a></li>
-					<li><a href="{% url 'search' %}">Search Routes</a></li>
+					<li><a href="{% url 'routes_create' %}">Create New Route</a></li>
+					
 					<li><a href="{% url 'logout' %}">Log Out</a></li>
 					{% else %}
 					<li><a href="{% url 'signup' %}">Sign Up</a></li>
