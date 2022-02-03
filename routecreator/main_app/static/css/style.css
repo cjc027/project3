@@ -45,10 +45,23 @@ textarea {
 #favorite {
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 30px;
   color:#d16909;
 }
 
 #favorite:hover {
   cursor: pointer;
 }
+
+i.account {
+  vertical-align: bottom;
+}
+
+#description {
+  white-space: pre-wrap;
+}
+
+.card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
+  color: #d16909;
+}
+

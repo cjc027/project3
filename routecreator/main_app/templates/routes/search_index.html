@@ -11,12 +11,23 @@
         <a href="{% url 'detail' route.id %}">
             <div class="card">
             <div class="card-content">
-                <span class="card-title">{{ route.name }}</span>
-                <p>Name: {{ route.name }}</p>
-                <p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
-            </div>
-            </div>
+                <div class="card-content">
+                    <span class="card-title">{{ route.name }}
+                      {% if route.mode_of_transport == 'B' %}
+                      <i class="material-icons">directions_bike</i>
+                      {% else %}
+                      <i class="material-icons">directions_run</i>
+                      {% endif %}
+                    </span>
+          
+          
+                    <p>{{route.city}}, {{route.state}}, {{route.country}}</p>
+          
+                    <img class="responsive-img" src="{{ route.photo_set.first.url }}" />
             </a>
+</div>
+</div>
+</div>
         {% endfor %}
     {% else %}
         <h1>No matching routes were found</h1>
