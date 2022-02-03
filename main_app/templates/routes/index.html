@@ -2,12 +2,14 @@
 
 <h1>My Routes</h1>
 <div class="row">
-  <div class="col s12">
-    {% for route in routes %}
+  {% for route in routes %}
+<div class="col s12 card">
+    
     <a id="details" href="{% url 'detail' route.id %}">
       <div class="card">
-      
+        <div class="col s6 ">
         <div class="card-content">
+          
           <span class="card-title">{{ route.name }}
             {% if route.mode_of_transport == 'B' %}
             <i class="material-icons">directions_bike</i>
@@ -16,16 +18,18 @@
             {% endif %}
           </span>
 
-
+         
           <p>{{route.city}}, {{route.state}}, {{route.country}}</p>
-
-          <img class="responsive-img" src="{{ route.photo_set.first.url }}" />
-        
+        </div>
+        </div>
+          <div class="col s6 center-align">
+          <img class="responsive-img index-img" src="{{ route.photo_set.first.url }}" />
+        </div>
         </div>
       </div>
     </a>
     {% endfor %}
   </div>
-</div>
+
 
 {% endblock content %}

@@ -1,32 +1,29 @@
 {% extends 'base.html' %} {% block content %}
-<h1>My Favorite Routes</h1>
 
-<div class="row">
-  {% if favorites %} {% for favorite in favorites %}
-
-  <a id="details" href="{% url 'detail' favorite.route.id %}">
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">{{ favorite.route.name }} 
-          {% if favorite.route.mode_of_transport == 'B' %}
-          <i class="material-icons">directions_bike</i>
-          {% else %}
-          <i class="material-icons">directions_run</i>
-          {% endif %}
-        </span>
-
-        <p>
-          {{favorite.route.city}}, {{favorite.route.state}},
-          {{favorite.route.country}}
-        </p>
-        <img class="responsive-img" src="{{ favorite.route.photo_set.first.url }}" />
+<h1>My Favorite Routes</h1> {% if favorites %} {% for favorite in favorites %}
+<div class="row">    
+  <div class="col s12 card">
+      <a id="details" href="{% url 'detail' favorite.route.id %}">
+      <div class="card">
+        <div class="col s6 ">
+          <div class="card-content">
+            <span class="card-title">{{ favorite.route.name }}
+              {% if favorite.route.mode_of_transport == 'B' %}
+              <i class="material-icons">directions_bike</i>
+              {% else %}
+              <i class="material-icons">directions_run</i>
+              {% endif %}
+            </span>
+            <p>{{favorite.route.city}}, {{favorite.route.state}}, {{favorite.route.country}}</p>
+          </div>
+        </div>
+        <div class="col s6 center-align">
+        <img class="responsive-img index-img" src="{{ favorite.route.photo_set.first.url }}" />
       </div>
     </div>
-  </a>
-  {% endfor %} {% else %}
-  <h1>No matching routes were found</h1>
-
-  {% endif %}
-</div>
+  </div></a>
+</div>{% endfor %} {% else %}
+<h1>No matching routes were found</h1>
+{% endif %}
 
 {% endblock content %}

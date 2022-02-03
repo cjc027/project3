@@ -1,40 +1,37 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %} <br>
 
-
-
-{% block content %}
-
-<div class='row'>
-
-    {% if routes %}
-        {% for route in routes %}
-        <a href="{% url 'detail' route.id %}">
-            <div class="card">
-            <div class="card-content">
-                <div class="card-content">
-                    <span class="card-title">{{ route.name }}
-                      {% if route.mode_of_transport == 'B' %}
-                      <i class="material-icons">directions_bike</i>
-                      {% else %}
-                      <i class="material-icons">directions_run</i>
-                      {% endif %}
-                    </span>
-          
-          
-                    <p>{{route.city}}, {{route.state}}, {{route.country}}</p>
-          
-                    <img class="responsive-img" src="{{ route.photo_set.first.url }}" />
-            </a>
-</div>
-</div>
-</div>
-        {% endfor %}
-    {% else %}
-        <h1>No matching routes were found</h1>
-        <a class='btn' href="{% url 'routes_create' %}">Create New Route</a>
+{% if routes %}
+<div class="row">
+  {% for route in routes %}
+  <div class="col s12 card">        
+    <a id="details" href="{% url 'detail' route.id %}">
+      <div class="card">
+        <div class="col s6 ">
+          <div class="card-content">      
+            <span class="card-title">{{ route.name }}
+            {% if route.mode_of_transport == 'B' %}
+            <i class="material-icons">directions_bike</i>
+            {% else %}
+            <i class="material-icons">directions_run</i>
+            {% endif %}
+            </span>
+            <p>{{route.city}}, {{route.state}}, {{route.country}}</p>
+            <p>Created By: {{ route.user.username }}</p>
+          </div>
+        </div>
+        <div class="col s6 center-align">
+          <img class="responsive-img index-img" src="{{ route.photo_set.first.url }}" />
+        </div>
+      </div>
+    </div></a>
+   {% endfor %}
+   </div>
+   {% else %}
+      <h1>No matching routes were found</h1>
+      <a class='btn' href="{% url 'routes_create' %}">Create New Route</a>
     {% endif %}
 
-</div>
+
 
 <div class='row'>
 
