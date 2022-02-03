@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1>Route Details</h1>
+
 
 <div class='row card'>
   <div class="col s6">
@@ -21,13 +21,13 @@
        <span class="card-title">{{ route.name }}</span>
 
         <p>Mode: {{ route.mode_of_transport }}</p>
-        <p>Distance: {{ route.travel_distance }}</p>
-        <p>Travel Time: {{route.travel_time }}</p>
+        <p>Distance: {{ route.travel_distance }} mi</p>
+        <p>Travel Time: {{ route.travel_hours }} h, {{ route.travel_minutes }} m </p>
         <p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
       </div>
       <div class="card-action">
-        <a href="{% url 'routes_update' route.id %}">Edit Route</a>
-        <a href="{% url 'routes_delete' route.id %}">Delete</a>
+        <a class="edit" href="{% url 'routes_update' route.id %}">Edit Route</a>
+        <a class="edit" href="{% url 'routes_delete' route.id %}">Delete</a>
       </div>
     </div>
   </div>
@@ -45,7 +45,8 @@
   <div class="col s12">
     <div class="card">
       <div class="card-content">
-        <p>{{route.description}}</p>
+        <h6>Description of Route:</h6>
+        <p id="description">{{route.description}}</p>
       </div>
     </div>
   </div>
@@ -57,7 +58,7 @@
   {% for photo in route.photo_set.all %}
   <img class="responsive-img card-panel" src="{{photo.url}}">
   {% empty %}
-  <div class="card-panel teal-text center-align">No Photos Uploaded</div>
+  <div class="card-panel center-align">No Photos Uploaded</div>
   {% endfor %}
 </div>
   
@@ -79,7 +80,7 @@
       <div class="card-content">
         {% for comment in route.comment_set.all %}
         <div style="padding: 10px;">
-          <p><b>{{ comment.user.username }}:</b></p>
+          <p id="account"> <i class="material-icons account">account_circle</i>  <b>{{ comment.user.username }}:</b></p>
           <p>{{ comment.content }}</p>
         </div>
         <hr>
