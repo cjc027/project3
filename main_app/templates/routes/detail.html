@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 
 
-
+<br>
 <div class='row card'>
   <div class="col s6">
     <div>
@@ -19,7 +19,7 @@
       {% endif %}
        
        <span class="card-title">{{ route.name }}</span>
-
+       <p>Created By: {{ route.user.username }}</p>
         <p>Mode: {{ route.mode_of_transport }}</p>
         <p>Distance: {{ route.travel_distance }} mi</p>
         <p>Travel Time: {{ route.travel_hours }} h, {{ route.travel_minutes }} m </p>
@@ -80,13 +80,18 @@
   <div class="row">
     <div class="col-md-8 card mb-4  mt-3 ">
       <div class="card-content">
+       
         {% for comment in route.comment_set.all %}
         <div style="padding: 10px;">
           <p id="account"> <i class="material-icons account">account_circle</i>  <b>{{ comment.user.username }}:</b></p>
           <p>{{ comment.content }}</p>
         </div>
         <hr>
+        {% empty %}
+        <div class="center-align">No Comments Yet</div>
+     
         {% endfor %}
+        
       </div>
     </div>
     <div class="col-md-8 card mb-4  mt-3 ">

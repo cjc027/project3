@@ -5,6 +5,10 @@ body {
   background-color: #eef0eb;
 }
 
+.brand-logo{
+  font-family: 'Antonio', sans-serif;
+}
+
 main.container {
   flex: 1 0 auto;
 }
@@ -34,8 +38,7 @@ textarea {
 }
 
 .btn {
-  background-color: #284B63;
-
+  background-color: #284b63;
 }
 
 .btn:hover {
@@ -46,7 +49,7 @@ textarea {
   background: none;
   border: none;
   font-size: 30px;
-  color:#d16909;
+  color: #d16909;
 }
 
 #favorite:hover {
@@ -61,7 +64,21 @@ i.account {
   white-space: pre-wrap;
 }
 
-.card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
+.card
+  .card-action
+  a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
   color: #d16909;
 }
 
+.index-img {
+  max-height: 100px;
+}
+
+.bike {
+  max-height: 50px;
+  transform: translateY(-3px);
+}
+
+img.bike {
+  vertical-align: middle;
+}

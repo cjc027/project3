@@ -76,7 +76,7 @@ def signup(request):
     return render(request, 'registration/signup.html', context)
 
 
-class RouteCreate (CreateView):
+class RouteCreate (LoginRequiredMixin, CreateView):
     model = Route
     fields = fields = ['name', 'mode_of_transport', 'travel_distance', 'country', 'state', 'city',
                        'travel_hours', 'travel_minutes',  'description']  # referring the models field, so what fields do you want
@@ -88,14 +88,14 @@ class RouteCreate (CreateView):
         return super().form_valid(form)
 
 
-class RouteUpdate(UpdateView):
+class RouteUpdate(LoginRequiredMixin, UpdateView):
     model = Route
     
     fields = ['name', 'mode_of_transport', 'travel_distance', 'country',
               'state', 'city', 'travel_hours', 'travel_minutes',  'description']
 
 
-class RouteDelete(DeleteView):
+class RouteDelete(LoginRequiredMixin, DeleteView):
     model = Route
     success_url = '/routes/'
 
@@ -123,7 +123,7 @@ def add_photo(request, route_id):
     else:
         return
 
-
+@login_required
 def add_comment(request, route_id):
     form = CommentForm(request.POST)
     if form.is_valid():
@@ -170,7 +170,7 @@ def search_index(request):
 
     return render(request, 'routes/search_index.html', {'routes': search_results})
 
-
+@login_required
 def favorites(request):
 	favorites = Favorite.objects.select_related('route').filter(user_id=request.user.id)
 
@@ -179,7 +179,7 @@ def favorites(request):
 		'favorites' : favorites
 	})
 
-
+@login_required
 def set_favorite(request, route_id):
     print(request.user.id)
 
