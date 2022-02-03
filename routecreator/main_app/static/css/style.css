@@ -2,13 +2,47 @@ body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+  background-color: #eef0eb;
 }
 
-main {
+main.container {
   flex: 1 0 auto;
 }
 
 footer.page-footer {
   padding-top: 0;
+  margin-top: 150px;
   text-align: right;
+  background-color: #284b63;
+}
+
+nav {
+  background-color: #284b63;
+}
+
+#details {
+  color: #153243;
+}
+
+label {
+  color: #153243;
+  font-size: 1rem;
+}
+
+textarea {
+  height: 10rem;
+}
+
+.btn {
+  background-color: #284B63;
+
+}
+
+.btn:hover {
+  background-color: #d16909;
+}
+#favorite {
+  background: none;
+  border: none;
+  font-size: 20px;
 }
