@@ -1,10 +1,10 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1>{{ route.name }} Details</h1>
+<h1>Route Details</h1>
 
-<div class='row'>
+<div class='row card'>
   <div class="col s6">
-    <div class="card">
+    <div>
       <div class="card-content">  
       {% if user_favorites %}
       <form action="{% url 'remove_favorite' route.id %}" method="POST" >
@@ -20,7 +20,6 @@
        
        <span class="card-title">{{ route.name }}</span>
 
-        <p>Name: {{ route.name }}</p>
         <p>Mode: {{ route.mode_of_transport }}</p>
         <p>Distance: {{ route.travel_distance }}</p>
         <p>Travel Time: {{route.travel_time }}</p>
@@ -33,34 +32,45 @@
     </div>
   </div>
   <div class="col s6">
+    <div class="card-content center-align">
+      <iframe style="min-height:200px" width="100%" class="responsive-img" src="https://www.google.com/maps/embed/v1/place?key={{maps_key}}&q={{city}},{{state}}" allowfullscreen>
+      </iframe>
+    </div>
+    <!-- valign-wrapper -->
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col s12">
     <div class="card">
       <div class="card-content">
-        <p>Description: {{route.description}}</p>
+        <p>{{route.description}}</p>
       </div>
     </div>
   </div>
 </div>
 <hr>
 
-
+<div class="row center-align">
+  <!-- Insert photo markup below this comment -->
+  {% for photo in route.photo_set.all %}
+  <img class="responsive-img card-panel" src="{{photo.url}}">
+  {% empty %}
+  <div class="card-panel teal-text center-align">No Photos Uploaded</div>
+  {% endfor %}
+</div>
+  
 <div class="row">
+  {% if user.id == route.user.id %}
+  <form action="{% url 'add_photo' route.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
+    {% csrf_token %}
+    <input type="file" name="photo-file">
+    <br><br>
+    <input type="submit" class="btn" value="Upload Photo">
+  </form>
+  {% endif %}
 </div>
-<!-- Insert photo markup below this comment -->
-{% for photo in route.photo_set.all %}
-<img class="responsive-img card-panel" src="{{photo.url}}">
-{% empty %}
-<div class="card-panel teal-text center-align">No Photos Uploaded</div>
-{% endfor %}
-
-{% if user.id == route.user.id %}
-<form action="{% url 'add_photo' route.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
-  {% csrf_token %}
-  <input type="file" name="photo-file">
-  <br><br>
-  <input type="submit" class="btn" value="Upload Photo">
-</form>
-</div>
-{% endif %}
 
 
 <div class="container">
@@ -69,8 +79,8 @@
       <div class="card-content">
         {% for comment in route.comment_set.all %}
         <div style="padding: 10px;">
-          <p>{{ comment.user.username }}:</p>
-          {{ comment.content }}
+          <p><b>{{ comment.user.username }}:</b></p>
+          <p>{{ comment.content }}</p>
         </div>
         <hr>
         {% endfor %}
@@ -84,7 +94,7 @@
         <form method="POST" action="{% url 'add_comment' route.id %}" style="margin-top: 1.3em;">
           {% csrf_token %}
           {{ comment_form.as_p }}
-          <button type="submit" class="btn">Submit</button>
+          <br><button type="submit" class="btn">Submit</button>
         </form>
         {% endif %}
       </div>

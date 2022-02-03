@@ -2,16 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 
-# Add the following import
 from django.http import HttpResponse
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-# for function definitions, not CBV
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 import uuid
 import boto3
+import os
 
 from .models import Favorite, Route, Photo
 
@@ -23,43 +23,40 @@ S3_BASE_URL = 'https://s3.us-west-1.amazonaws.com/'
 
 def home(request):
     return redirect('about')
-  # return HttpResponse('<h1>Hello /ᐠ｡‸｡ᐟ\ﾉ</h1>')
 
 
 def about(request):
     return render(request, 'about.html')
 
-# class RouteList(LoginRequiredMixin, ListView):
-# 	model = Route
-
 
 @login_required
 def index(request):
-
-    # routes = Route.objects.all()
     routes = Route.objects.filter(user=request.user)
-
     return render(request, 'routes/index.html', {
         'routes': routes
     })
 
 
 def routes_detail(request, route_id):
+    key = os.environ['GOOGLE_MAPS_EMBED_API_KEY']
 
-	route = Route.objects.get(id=route_id)
-	comment_form = CommentForm()
-	user_favorites = Favorite.objects.filter(route_id=route_id, user_id=request.user.id).values_list('id')
-	# user_favorites = Favorite.objects.filter(
-	#     # id__in=route.favorite_set.all().values_list('id'))
-	# print(user_favorites[0].user_id)
-	# print(user_favorites[0].route_id)
-	print(user_favorites.values_list('id'))
-	print(user_favorites)
-	return render(request, 'routes/detail.html', {
-		'route': route,
-		'comment_form': comment_form,
-		'user_favorites': user_favorites
-	})
+    route = Route.objects.get(id=route_id)
+    comment_form = CommentForm()
+    user_favorites = Favorite.objects.filter(route_id=route_id, user_id=request.user.id).values_list('id')
+    
+    state = route.state.replace(" ", "+")
+    city = route.city.replace(" ", "+")
+
+    # print(user_favorites.values_list('id'))
+    # print(user_favorites)
+    return render(request, 'routes/detail.html', {
+        'route': route,
+        'comment_form': comment_form,
+        'user_favorites': user_favorites,
+        'maps_key': key,
+        'state': state,
+        'city': city
+    })
 
 
 def signup(request):
@@ -93,7 +90,7 @@ class RouteCreate (CreateView):
 
 class RouteUpdate(UpdateView):
     model = Route
-    # limit the renaming of the cat
+    
     fields = ['name', 'mode_of_transport', 'travel_distance', 'country',
               'state', 'city', 'travel_hours', 'travel_minutes',  'description']
 
@@ -140,7 +137,6 @@ def add_comment(request, route_id):
 
 
 def search(request):
-    # print(request.QUERY)
     return render(request, 'search.html')
 
 
@@ -177,8 +173,7 @@ def search_index(request):
 
 def favorites(request):
 	favorites = Favorite.objects.select_related('route').filter(user_id=request.user.id)
-	# print(dir(Route.favorite_set))
-	#print(Favorite.objects.filter(user_id=request.user.id))
+
 	print(favorites)
 	return render(request, 'favorites.html', {
 		'favorites' : favorites
@@ -190,8 +185,6 @@ def set_favorite(request, route_id):
 
     routes = Route.objects.filter(id=route_id)
     f = Favorite.objects.filter(route_id=route_id)
-    # new_favorite.route_id = route_id
-    # this is where we left off on Tuesday
 
     print(f)
     favorite_set = routes[0].favorite_set.all()
@@ -222,20 +215,3 @@ def remove_favorite(request, route_id):
 	print(favorite.delete.__doc__)
 	print(f)
 	return redirect('detail', route_id=route_id)
-
-
-	# @login_required
-# def comment(request, comment_id):
-#    comments = Comment.objects.get(pk=comment_id)
-#    if request.user == comments.user:
-
-
-#     #   Comment.objects.filter(id=comment_id).delete()
-#     #   return redirect('posts:mypost')
-
-
-# @login_required
-# def post_edit(request, post_id):
-#   item = Post.objects.get(pk=post_id)
-#   if request.user == item.user:
-#       ...
