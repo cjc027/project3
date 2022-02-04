@@ -3,13 +3,11 @@
 <h1>My Routes</h1>
 <div class="row">
   {% for route in routes %}
-<div class="col s12 card">
-    
+<div class="col s12 card"> 
     <a id="details" href="{% url 'detail' route.id %}">
       <div class="card">
         <div class="col s6 ">
         <div class="card-content">
-          
           <span class="card-title">{{ route.name }}
             {% if route.mode_of_transport == 'Bike' %}
             <i class="material-icons">directions_bike</i>
@@ -17,8 +15,6 @@
             <i class="material-icons">directions_run</i>
             {% endif %}
           </span>
-
-         
           <p>{{route.city}}, {{route.state}}, {{route.country}}</p>
         </div>
         </div>
