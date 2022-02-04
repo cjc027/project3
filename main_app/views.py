@@ -1,20 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
-
 from django.http import HttpResponse
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 import uuid
 import boto3
 import os
-
 from .models import Favorite, Route, Photo
-
 from .forms import RouteForm, CommentForm
 
 BUCKET = 'cjc027-catcollector'
@@ -39,16 +34,11 @@ def index(request):
 
 def routes_detail(request, route_id):
     key = os.environ['GOOGLE_MAPS_EMBED_API_KEY']
-
     route = Route.objects.get(id=route_id)
     comment_form = CommentForm()
     user_favorites = Favorite.objects.filter(route_id=route_id, user_id=request.user.id).values_list('id')
-    
     state = route.state.replace(" ", "+")
     city = route.city.replace(" ", "+")
-
-    # print(user_favorites.values_list('id'))
-    # print(user_favorites)
     return render(request, 'routes/detail.html', {
         'route': route,
         'comment_form': comment_form,
@@ -61,7 +51,6 @@ def routes_detail(request, route_id):
 
 def signup(request):
     error_message = ''
-
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -70,7 +59,6 @@ def signup(request):
             return redirect('index')
         else:
             error_message = 'Invalid sign up - Try again'
-
     form = UserCreationForm()
     context = {'form': form, 'error_message': error_message}
     return render(request, 'registration/signup.html', context)
@@ -79,8 +67,8 @@ def signup(request):
 class RouteCreate (LoginRequiredMixin, CreateView):
     model = Route
     fields = fields = ['name', 'mode_of_transport', 'travel_distance', 'country', 'state', 'city',
-                       'travel_hours', 'travel_minutes',  'description']  # referring the models field, so what fields do you want
-    # to include on the form
+                       'travel_hours', 'travel_minutes',  'description'] 
+   
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -90,7 +78,6 @@ class RouteCreate (LoginRequiredMixin, CreateView):
 
 class RouteUpdate(LoginRequiredMixin, UpdateView):
     model = Route
-    
     fields = ['name', 'mode_of_transport', 'travel_distance', 'country',
               'state', 'city', 'travel_hours', 'travel_minutes',  'description']
 
@@ -101,8 +88,6 @@ class RouteDelete(LoginRequiredMixin, DeleteView):
 
 
 def add_photo(request, route_id):
-    # photo-file will be the "name" attribute on the <input type="file">
-
     photo_file = request.FILES.get('photo-file', None)
     if request.user == Route.objects.get(id=route_id).user:
         if photo_file:
@@ -115,7 +100,6 @@ def add_photo(request, route_id):
                 s3.upload_fileobj(photo_file, BUCKET, key)
                 # build the full url string
                 url = f"{S3_BASE_URL}{BUCKET}/{key}"
-                # we can assign to cat_id or cat (if you have a cat object)
                 Photo.objects.create(url=url, route_id=route_id)
             except:
                 print('An error occurred uploading file to S3')
@@ -127,8 +111,6 @@ def add_photo(request, route_id):
 def add_comment(request, route_id):
     form = CommentForm(request.POST)
     if form.is_valid():
-        print('Form is valid!')
-        print(type(request.user))
         new_comment = form.save(commit=False)
         new_comment.route_id = route_id
         new_comment.user_id = request.user.id
@@ -141,9 +123,6 @@ def search(request):
 
 
 def search_index(request):
-
-    print(request.GET, '<===== REQUEST')
-
     route_filter = {'country': '', 'state': '', 'city': ''}
 
     if request.GET['country']:
@@ -166,52 +145,24 @@ def search_index(request):
     else:
         search_results = Route.objects.all()
 
-    print(search_results, '<== FILTERED ROUTES')
-
     return render(request, 'routes/search_index.html', {'routes': search_results})
 
 @login_required
 def favorites(request):
 	favorites = Favorite.objects.select_related('route').filter(user_id=request.user.id)
 
-	print(favorites)
 	return render(request, 'favorites.html', {
 		'favorites' : favorites
 	})
 
+
 @login_required
 def set_favorite(request, route_id):
-    print(request.user.id)
-
-    routes = Route.objects.filter(id=route_id)
-    f = Favorite.objects.filter(route_id=route_id)
-
-    print(f)
-    favorite_set = routes[0].favorite_set.all()
-    # favorite_set.create(request.user.id)
-    # favorite_set.save()
-    print(favorite_set)
-
-    # route = get_object_or_404(Route, id=route_id)
-    # if request.method == 'POST':
-
-    # 	route.favorite.add(request.user)
-    # 	print(route)
     Favorite.objects.create(user_id=request.user.id, route_id=route_id)
-	
-    print(f)
     return redirect('detail', route_id=route_id)
 
 
 def remove_favorite(request, route_id):
-	f = Favorite.objects.filter(route_id=route_id)
-	print(request.user)
-	routes = Route.objects.filter(id=route_id)
-	print(routes[0])
 	favorite = Favorite.objects.filter(user_id=request.user.id, route_id=route_id)
-	# Favorite.objects.remove(favorite)
 	favorite.delete()
-	print(dir(favorite.first))
-	print(favorite.delete.__doc__)
-	print(f)
 	return redirect('detail', route_id=route_id)

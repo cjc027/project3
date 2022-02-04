@@ -1,29 +1,32 @@
 {% extends 'base.html' %} {% block content %}
 
-
-<br>
-<div class='row card'>
+<br />
+<div class="row card">
   <div class="col s6">
     <div>
-      <div class="card-content">  
-      {% if user_favorites %}
-      <form action="{% url 'remove_favorite' route.id %}" method="POST" >
-        {% csrf_token %}
-        <input id="favorite" type="submit" class="right" value="★" />
-    </form> 
-      {% else %}
-    <form action="{% url 'set_favorite' route.id %}" method="POST" >
-      {% csrf_token %}
-      <input id="favorite" type="submit" class="right" value="☆" />
-    </form>
-      {% endif %}
-       
-       <span class="card-title">{{ route.name }}</span>
-       <p>Created By: {{ route.user.username }}</p>
+      <div class="card-content">
+        {% if user_favorites %}
+        <form action="{% url 'remove_favorite' route.id %}" method="POST">
+          {% csrf_token %}
+          <input id="favorite" type="submit" class="right" value="★" />
+        </form>
+        {% else %}
+        <form action="{% url 'set_favorite' route.id %}" method="POST">
+          {% csrf_token %}
+          <input id="favorite" type="submit" class="right" value="☆" />
+        </form>
+        {% endif %}
+
+        <span class="card-title">{{ route.name }}</span>
+        <p>Created By: {{ route.user.username }}</p>
         <p>Mode: {{ route.mode_of_transport }}</p>
         <p>Distance: {{ route.travel_distance }} mi</p>
-        <p>Travel Time: {{ route.travel_hours }} h, {{ route.travel_minutes }} m </p>
-        <p>Starting Location: {{route.city}}, {{route.state}}, {{route.country}}</p>
+        <p>
+          Travel Time: {{ route.travel_hours }} h, {{ route.travel_minutes }} m
+        </p>
+        <p>
+          Starting Location: {{route.city}}, {{route.state}}, {{route.country}}
+        </p>
       </div>
       {% if user.id == route.user.id %}
       <div class="card-action">
@@ -35,13 +38,19 @@
   </div>
   <div class="col s6">
     <div class="card-content center-align">
-      <iframe style="min-height:200px" width="100%" class="responsive-img" src="https://www.google.com/maps/embed/v1/place?key={{maps_key}}&q={{city}},{{state}}" allowfullscreen>
+      <iframe
+        style="min-height: 200px"
+        width="100%"
+        class="responsive-img"
+        src="https://www.google.com/maps/embed/v1/place?key={{maps_key}}&q={{city}},{{state}}"
+        allowfullscreen
+      >
       </iframe>
     </div>
     <!-- valign-wrapper -->
   </div>
 </div>
-<hr>
+<hr />
 
 <div class="row">
   <div class="col s12">
@@ -53,56 +62,63 @@
     </div>
   </div>
 </div>
-<hr>
+<hr />
 
 <div class="row center-align">
   <!-- Insert photo markup below this comment -->
   {% for photo in route.photo_set.all %}
-  <img class="responsive-img card-panel" src="{{photo.url}}">
+  <img class="responsive-img card-panel" src="{{photo.url}}" />
   {% empty %}
   <div class="card-panel center-align">No Photos Uploaded</div>
   {% endfor %}
 </div>
-  
+
 <div class="row">
   {% if user.id == route.user.id %}
-  <form action="{% url 'add_photo' route.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
+  <form
+    action="{% url 'add_photo' route.id %}"
+    enctype="multipart/form-data"
+    method="POST"
+    class="card-panel"
+  >
     {% csrf_token %}
-    <input type="file" name="photo-file">
-    <br><br>
-    <input type="submit" class="btn" value="Upload Photo">
+    <input type="file" name="photo-file" />
+    <br /><br />
+    <input type="submit" class="btn" value="Upload Photo" />
   </form>
   {% endif %}
 </div>
 
-
 <div class="container">
   <div class="row">
-    <div class="col-md-8 card mb-4  mt-3 ">
+    <div class="col-md-8 card mb-4 mt-3">
       <div class="card-content">
-       
         {% for comment in route.comment_set.all %}
-        <div style="padding: 10px;">
-          <p id="account"> <i class="material-icons account">account_circle</i>  <b>{{ comment.user.username }}:</b></p>
+        <div style="padding: 10px">
+          <p id="account">
+            <i class="material-icons account">account_circle</i>
+            <b>{{ comment.user.username }}:</b>
+          </p>
           <p>{{ comment.content }}</p>
         </div>
-        <hr>
+        <hr />
         {% empty %}
         <div class="center-align">No Comments Yet</div>
-     
+
         {% endfor %}
-        
       </div>
     </div>
-    <div class="col-md-8 card mb-4  mt-3 ">
+    <div class="col-md-8 card mb-4 mt-3">
       <div class="card-content">
-        {% if new_comment %}
-        {% else %}
+        {% if new_comment %} {% else %}
         <h3>Leave a comment</h3>
-        <form method="POST" action="{% url 'add_comment' route.id %}" style="margin-top: 1.3em;">
-          {% csrf_token %}
-          {{ comment_form.as_p }}
-          <br><button type="submit" class="btn">Submit</button>
+        <form
+          method="POST"
+          action="{% url 'add_comment' route.id %}"
+          style="margin-top: 1.3em"
+        >
+          {% csrf_token %} {{ comment_form.as_p }}
+          <br /><button type="submit" class="btn">Submit</button>
         </form>
         {% endif %}
       </div>

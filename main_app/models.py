@@ -37,7 +37,6 @@ class Comment(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
-    # rating = models.BooleanField('Star this route if you like it', default=False)
     def __str__(self):
         return f"Comment belongs to {self.route_id} and {self.user}"
     class Meta:
